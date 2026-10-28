@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>វិញ្ញាសាអនុវត្តឈាមវិទ្យា៖ Hematopoiesis & Erythropoiesis - ថ្នាក់ BSL ឆ្នាំទី១</title>
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b1120;
+  --card: #15203b;
+  --card-border: #1e293b;
+  --primary: #38bdf8;
+  --primary-hover: #0284c7;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #f59e0b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kantumruy Pro', 'Inter', system-ui, sans-serif; }
+body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px; display: flex; flex-direction: column; align-items: center; }
+.wrap { width: 100%; max-width: 820px; margin: 0 auto; }
+header.hero { text-align: center; margin-bottom: 20px; }
+.hero h1 { font-size: 1.35rem; color: var(--primary); margin-bottom: 6px; line-height: 1.4; }
+.hero p { color: var(--text-muted); font-size: 0.88rem; }
+.card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--card-border); font-size: 0.88rem; }
+.badge { background: #0369a1; color: #bae6fd; padding: 4px 10px; border-radius: 9999px; font-weight: 600; font-size: 0.75rem; }
+.timer-box { font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 6px; font-size: 1.05rem; }
+.timer-box.urgent { color: var(--danger); }
+.question-title { font-size: 1.05rem; line-height: 1.6; font-weight: 600; margin-bottom: 14px; color: var(--text); }
+.diagram-box { display: flex; justify-content: center; align-items: center; background: #080e1e; border: 1px solid #1e3a8a; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+.options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.option-btn { background: #0b1120; border: 1px solid var(--card-border); color: var(--text); padding: 14px 16px; border-radius: 10px; text-align: left; font-size: 0.94rem; cursor: pointer; transition: all 0.15s ease; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px; }
+.option-btn:hover:not(:disabled) { border-color: var(--primary); background: #1a253c; }
+.option-btn:disabled { cursor: default; }
+.option-btn.correct { background: rgba(34, 197, 94, 0.22) !important; border-color: var(--success) !important; color: #86efac; font-weight: 600; }
+.option-btn.wrong { background: rgba(239, 68, 68, 0.22) !important; border-color: var(--danger) !important; color: #fca5a5; }
+.letter { font-weight: 700; color: var(--primary); font-size: 1.05rem; min-width: 25px; }
+.hint-section { margin-bottom: 16px; }
+.hint-btn { background: none; border: none; color: var(--accent); font-size: 0.88rem; cursor: pointer; text-decoration: underline; padding: 0; }
+.hint-content { display: none; margin-top: 8px; background: rgba(245, 158, 11, 0.12); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 4px; font-size: 0.88rem; color: #fde68a; line-height: 1.5; }
+.feedback-box { display: none; background: #0d1a33; border: 1px solid #2563eb; border-radius: 10px; padding: 16px; margin-bottom: 16px; line-height: 1.5; font-size: 0.9rem; }
+.feedback-box h4 { margin-bottom: 8px; color: #93c5fd; font-size: 0.95rem; }
+.controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.action-btn { background: var(--primary); color: #090d16; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; font-size: 0.92rem; cursor: pointer; transition: background 0.15s; }
+.action-btn:hover { background: var(--primary-hover); }
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.progress-wrap { margin-top: 20px; }
+.progress-bar-bg { background: #1e293b; height: 8px; border-radius: 9999px; overflow: hidden; }
+.progress-bar-fill { background: var(--primary); height: 100%; width: 4.34%; transition: width 0.3s; }
+.final-screen { display: none; text-align: center; padding: 36px 12px; }
+.final-score { font-size: 3rem; font-weight: 800; color: var(--primary); margin: 16px 0; }
+.review-list { margin-top: 20px; text-align: left; }
+.review-item { border: 1px solid var(--card-border); border-radius: 8px; padding: 12px; margin-bottom: 10px; background: #0b1120; font-size: 0.88rem; }
+.review-item summary { cursor: pointer; font-weight: 700; color: var(--primary); }
+.review-item p { margin-top: 6px; color: #cbd5e1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>វិញ្ញាសាអនុវត្ត៖ Hematopoiesis & Erythropoiesis</h1>
+    <p>សម្រាប់និស្សិតបច្ចេកទេសមន្ទីរពិសោធន៍ BSL ឆ្នាំទី១ • ២៣ សំណួរចៃដន្យ (Shuffle) • ៦០ វិនាទី</p>
+  </header>
+
+  <div class="card" id="quizCard">
+    <div class="status-bar">
+      <span class="badge" id="topicBadge">Hematopoiesis</span>
+      <span id="qCount" style="font-weight:600;">សំណួរទី 1 នៃ 23</span>
+      <div class="timer-box" id="timerBox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="timerText">60s</span>
+      </div>
+    </div>
+
+    <div id="diagramContainer" class="diagram-box"></div>
+
+    <div class="question-title" id="questionTitle"></div>
+
+    <div class="hint-section">
+      <button class="hint-btn" id="hintToggleBtn" onclick="toggleHint()">💡 បង្ហាញតម្រុយគ្លីនិក (Show Hint)</button>
+      <div class="hint-content" id="hintContent"></div>
+    </div>
+
+    <div class="options-grid" id="optionsGrid"></div>
+
+    <div class="feedback-box" id="feedbackBox">
+      <h4>ការពន្យល់លម្អិតក្នុងមន្ទីរពិសោធន៍ (Lab Rationale):</h4>
+      <div id="feedbackText"></div>
+    </div>
+
+    <div class="controls">
+      <span style="font-size:0.88rem; color:var(--text-muted);" id="liveScore">ពិន្ទុ: 0 / 0</span>
+      <button class="action-btn" id="nextBtn" onclick="nextQuestion()" disabled>សំណួរបន្ទាប់ →</button>
+    </div>
+  </div>
+
+  <div class="card final-screen" id="finalCard">
+    <h2>បញ្ចប់ការធ្វើតេស្ត!</h2>
+    <p style="margin-top:8px; color:var(--text-muted);">អ្នកបានឆ្លងកាត់ការអនុវត្តវិញ្ញាសា Hematology: Hematopoiesis & Erythropoiesis រួចរាល់ហើយ។</p>
+    <div class="final-score" id="finalScoreVal">0%</div>
+    <p id="finalFeedback" style="margin-bottom: 24px; color: #cbd5e1; font-size:1.02rem; line-height:1.6;"></p>
+    <button class="action-btn" onclick="initQuiz()">ធ្វើវិញ្ញាសាសាឡើងវិញ (Shuffle ថ្មី)</button>
+    <div class="review-list" id="reviewContainer"></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const rawQuestions = [
+  {
+    topic: "Hematopoiesis — Mesoblastic Period",
+    title: "ក្នុងអំឡុងពេល Mesoblastic period នៃការកកើតឈាមក្នុងគភ៌ (ចាប់ពី ២ សប្តាហ៍ ដល់ ២ ខែ) តើសរីរាង្គណាជាកន្លែងផលិត Erythroblasts ដំបូងគេបង្អស់?",
+    hint: "ថង់ពងមាន់គភ៌ (Fetal yolk sac)។",
+    options: [
+      { text: "ថង់ពងមាន់គភ៌ (Fetal yolk sac)", isCorrect: true },
+      { text: "ខួរឆ្អឹងកងខ្នង (Vertebrae)", isCorrect: false },
+      { text: "ក្រពេញទីមុស (Thymus)", isCorrect: false },
+      { text: "អណ្តើក (Spleen)", isCorrect: false }
+    ],
+    rationale: "នៅដំណាក់កាល Mesoblastic period (២ សប្តាហ៍ ដល់ ២ ខែនៃគភ៌) ការផលិតឈាម Erythropoiesis កើតចេញពី Fetal yolk sac ដោយផលិតបាន Primitive erythroblasts និង Embryonic hemoglobins ដូចជា Gower I, Gower II និង Portland។"
+  },
+  {
+    topic: "Hematopoiesis — Adult Bone Marrow Sites",
+    title: "ចំពោះមនុស្សពេញវ័យ (Adult life) តើទីតាំងឆ្អឹងចម្បងណាខ្លះដែលនៅតែរក្សា Red bone marrow សកម្មក្នុងការផលិតគោលិកាឈាម?",
+    hint: "ឆ្អឹងកណ្តាលអ័ក្ស (Sternum, Pelvis/Iliac crest, Vertebrae, Ribs)។",
+    svg: `<svg width="220" height="90" viewBox="0 0 220 90"><path d="M 60,10 L 160,10 L 140,80 L 80,80 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/><ellipse cx="110" cy="35" rx="35" ry="15" fill="#ef4444" opacity="0.6"/><text x="110" y="38" fill="#f8fafc" font-size="10" text-anchor="middle">Red Marrow</text><text x="110" y="70" fill="#94a3b8" font-size="9" text-anchor="middle">Sternum / Iliac crest</text></svg>`,
+    options: [
+      { text: "Sternum, Iliac crest (Pelvis), Vertebrae និង Ribs", isCorrect: true },
+      { text: "ឆ្អឹងកំភួនដៃ (Radius) និងឆ្អឹងស្មងជើង (Tibia)", isCorrect: false },
+      { text: "គ្រប់ឆ្អឹងទាំងអស់នៃគ្រោងឆ្អឹងដោយគ្មានករណីលើកលែង", isCorrect: false },
+      { text: "ឆ្អឹងម្រាមដៃ និងឆ្អឹងម្រាមជើងតែប៉ុណ្ណោះ", isCorrect: false }
+    ],
+    rationale: "មុនអាយុ ១៨ ឆ្នាំ គ្រប់ឆ្អឹងទាំងអស់ជាពិសេសឆ្អឹងវែងសុទ្ធតែផលិតឈាម។ ពេលពេញវ័យ Red marrow ត្រូវជំនួសដោយ Yellow marrow នៅឆ្អឹងវែង ហើយការផលិតឈាមសកម្មបង្រួមមកនៅតែឆ្អឹងកណ្តាលអ័ក្សដូចជា Sternum, Iliac crest, Vertebrae, Ribs, Skull និង Proximal femur។"
+  },
+  {
+    topic: "Hematopoiesis — Extramedullary Hematopoiesis",
+    title: "នៅពេលដែលខួរឆ្អឹង (Bone marrow) រងការខូចខាតធ្ងន់ធ្ងរ (ដូចជា Infiltration of leukemic cells ឬ Fibrosis) តើសរីរាង្គណាខ្លះអាចរស់ឡើងវិញនូវសមត្ថភាពផលិតឈាម (Extramedullary hematopoiesis)?",
+    hint: "ថ្លើម និងអណ្តើក (Liver and Spleen)។",
+    options: [
+      { text: "ថ្លើម និងអណ្តើក (Liver and Spleen)", isCorrect: true },
+      { text: "តម្រងនោម និងប្លោកនោម", isCorrect: false },
+      { text: "ក្រពះ និងពោះវៀនធំ", isCorrect: false },
+      { text: "សួត និងបេះដូង", isCorrect: false }
+    ],
+    rationale: "ការផលិតឈាមក្នុងខួរឆ្អឹងហៅថា Intramedullary hematopoiesis។ ពេលខួរឆ្អឹងខូចខាត ថ្លើម និងអណ្តើកអាចដើរតួជំនួសហៅថា Extramedullary hematopoiesis ដែលនាំឱ្យកើត Hepatosplenomegaly (ថ្លើម និងអណ្តើករីកធំ)។"
+  },
+  {
+    topic: "Spleen — Culling vs Pitting",
+    title: "ក្នុងមន្ទីរពិសោធន៍ឈាមវិទ្យា តើពាក្យបច្ចេកទេស 'Pitting' របស់អណ្តើក (Spleen) សំដៅលើសកម្មភាពអ្វីលើគោលិកាឈាមក្រហម?",
+    hint: "ការចូកឬដកយកកម្ទេច Inclusions (ដូចជា Howell-Jolly bodies) ចេញដោយរក្សា RBC ឱ្យនៅរស់។",
+    options: [
+      { text: "ការដកយក Inclusions (ដូចជា Howell-Jolly bodies) ចេញដោយមិនបំផ្លាញ RBC", isCorrect: true },
+      { text: "ការកម្ទេច និងលេបត្របាក់គោលិកាក្រហមចាស់ៗទាំងមូលចោល", isCorrect: false },
+      { text: "ការផលិតអរម៉ូន Erythropoietin ចូលក្នុងឈាម", isCorrect: false },
+      { text: "ការផលិតកោសិកា Myeloblast ក្នុងបរិមាណច្រើន", isCorrect: false }
+    ],
+    rationale: "អណ្តើកមានមុខងារ Filtration សំខាន់ពីរ៖ 'Culling' គឺជាការបំផ្លាញនិងច្រោះ RBC ចាស់ៗខូចទ្រង់ទ្រាយចោលទាំងមូល រីឯ 'Pitting' គឺជាការដកស្រង់កម្ទេច Inclusions មិនប្រក្រតី (ដូចជា Howell-Jolly bodies, Heinz bodies) ចេញពី RBC ដោយទុកឱ្យ RBC វិលចូលចរន្តឈាមវិញ។"
+  },
+  {
+    topic: "Thymus — Function",
+    title: "តើក្រពេញទីមុស (Thymus) មានតួនាទីស្នូលអ្វីខ្លះក្នុងប្រព័ន្ធភាពស៊ាំ និងឈាមវិទ្យា?",
+    hint: "ជួយបំប្លែង Virgin lymphocytes ទៅជា Immunocompetent T-lymphocytes។",
+    options: [
+      { text: "ជួយធ្វើឱ្យទុំនូវកោសិកា Virgin lymphocytes ទៅជា T-lymphocytes", isCorrect: true },
+      { text: "ផលិតផ្លាកែត (Platelets) ចូលក្នុងចរន្តឈាមរត់", isCorrect: false },
+      { text: "ច្រោះកោសិកាឈាមក្រហមចាស់ៗចេញពីចរន្តឈាម", isCorrect: false },
+      { text: "ផលិតកោសិកា Neutrophils ប្រយុទ្ធប្រឆាំងបាក់តេរី", isCorrect: false }
+    ],
+    rationale: "Thymus គឺជា Primary lymphoid organ សកម្មខ្លាំងតាំងពីកើតដល់វ័យពេញវ័យ (Puberty)។ តួនាទីចម្បងគឺ Maturation of virgin lymphocytes into immunocompetent T-lymphocytes មុននឹងបញ្ជូនទៅកាន់ Secondary lymphoid tissues។"
+  },
+  {
+    topic: "Hematopoiesis — Daily Cell Production",
+    title: "យោងតាមស្លាយមេរៀនរបស់សាស្ត្រាចារ្យ Sareth Sokhom តើខួរឆ្អឹងធម្មតាអាចផលិតគោលិកាក្រហម (RBC), គោលិកាស (WBC) និងផ្លាកែត (Platelets) ក្នុងមួយថ្ងៃបានចំនួនប៉ុន្មាន?",
+    hint: "RBC 3 ពាន់លាន, WBC 1.5 ពាន់លាន, Platelets 2.5 ពាន់លាន។",
+    options: [
+      { text: "3 ពាន់លាន RBC, 1.5 ពាន់លាន WBC, និង 2.5 ពាន់លាន Platelets", isCorrect: true },
+      { text: "10 ពាន់លាន RBC, 10 ពាន់លាន WBC, និង 10 ពាន់លាន Platelets", isCorrect: false },
+      { text: "500 លាន RBC, 100 លាន WBC, និង 50 លាន Platelets", isCorrect: false },
+      { text: "1 ពាន់លាន RBC, 5 ពាន់លាន WBC, និង 500 លាន Platelets", isCorrect: false }
+    ],
+    rationale: "ស្លាយមេរៀនបញ្ជាក់ច្បាស់ថា៖ ក្នុងមួយថ្ងៃៗ Bone marrow អាចផលិតបាន 3 ពាន់លាន (billion) RBCs, 1.5 ពាន់លាន WBCs, និង 2.5 ពាន់លាន Platelets ដើម្បីផ្គត់ផ្គង់ចរន្តឈាមរត់។"
+  },
+  {
+    topic: "Bone Marrow — M:E Ratio",
+    title: "តើតម្លៃផលធៀបធម្មតារវាងកោសិកាដើម Myeloid និង Erythroid (Normal M:E ratio) ក្នុងខួរឆ្អឹងមានតម្លៃប៉ុន្មាន?",
+    hint: "Myeloid ច្រើនជាង Erythroid (3:1 ដល់ 4:1)។",
+    options: [
+      { text: "3:1 ទៅ 4:1", isCorrect: true },
+      { text: "1:10 ទៅ 1:20", isCorrect: false },
+      { text: "10:1 ទៅ 15:1", isCorrect: false },
+      { text: "1:1 ជានិច្ច", isCorrect: false }
+    ],
+    rationale: "ផលធៀប Myeloid:Erythroid (M:E ratio) ធម្មតានៅក្នុងខួរឆ្អឹងគឺ 3:1 ដល់ 4:1។ មូលហេតុដែល Myeloid ច្រើនជាង ព្រោះអាយុកាលរបស់កោសិកាឈាមសខ្លីជាងអាយុកាល RBC (120 ថ្ងៃ) ឆ្ងាយណាស់ ទើបត្រូវការផលិតច្រើនជាង។"
+  },
+  {
+    topic: "Erythropoietin — Primary Source & Trigger",
+    title: "តើអ័រម៉ូន Erythropoietin (EPO) ត្រូវបានផលិតឡើងពីសរីរាង្គណាជាចម្បង (៩០%) ហើយអ្វីជាកត្តាជំរុញ (Stimulus) ឱ្យមានការបញ្ចេញវា?",
+    hint: "តម្រងនោម (Kidneys 90%) ឆ្លើយតបនឹង Hypoxia (កង្វះអុកស៊ីសែនក្នុងជាលិកា)។",
+    svg: `<svg width="220" height="90" viewBox="0 0 220 90"><path d="M 50,45 C 50,20 80,15 100,30 C 120,15 150,20 150,45 C 150,75 110,85 100,85 C 90,85 50,75 50,45 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/><text x="100" y="45" fill="#f59e0b" font-size="10" text-anchor="middle">Kidney (90% EPO)</text><text x="100" y="62" fill="#ef4444" font-size="9" text-anchor="middle">Trigger: Tissue Hypoxia</text></svg>`,
+    options: [
+      { text: "តម្រងនោម (Kidneys) ដោយសារកង្វះអុកស៊ីសែនក្នុងជាលិកា (Tissue Hypoxia)", isCorrect: true },
+      { text: "ថ្លើម (Liver) ដោយសារការឡើងកំហាប់ជាតិស្ករក្នុងឈាម", isCorrect: false },
+      { text: "ខួរក្បាល (Brain) ដោយសារការថយចុះកម្រិតជាតិទឹក", isCorrect: false },
+      { text: "បេះដូង (Heart) ដោយសារការកើនឡើងសម្ពាធឈាម", isCorrect: false }
+    ],
+    rationale: "Erythropoietin ត្រូវបានផលិត 90% ដោយ Peritubular interstitial cells នៃតម្រងនោម (Kidneys) និង 10% ដោយថ្លើម។ កត្តាជំរុញឱ្យផលិត EPO គឺ Oxygen tension ធ្លាក់ចុះក្នុងជាលិកាតម្រងនោម (Renal hypoxia)។"
+  },
+  {
+    topic: "Erythropoiesis — Stem Cell Proliferation Yield",
+    title: "យោងតាមគំនូសបំព្រួញនៃមេរៀន Erythropoiesis តើកោសិកាដើម Pronormoblast (Proerythroblast) ចំនួន ១ អាចធ្វើការបែងចែក និងលូតលាស់ផ្តល់ជាកោសិកាក្រហមពេញវ័យ (Mature RBCs) បានចំនួនប៉ុន្មាន?",
+    hint: "ឆ្លងកាត់ការបែងចែកកោសិកា ៤ លើក (1 -> 2 -> 4 -> 8 -> 16)។",
+    options: [
+      { text: "16 Mature erythrocytes", isCorrect: true },
+      { text: "2 Mature erythrocytes", isCorrect: false },
+      { text: "4 Mature erythrocytes", isCorrect: false },
+      { text: "64 Mature erythrocytes", isCorrect: false }
+    ],
+    rationale: "តាមរយៈដំណើរការ Erythropoiesis កោសិកា Pronormoblast ១ ឆ្លងកាត់ mitotic divisions ផ្ដល់ជា Early normoblasts (2) -> Intermediate (4) -> Late normoblasts (8/16) រហូតទទួលបាន 16 Mature erythrocytes។"
+  },
+  {
+    topic: "Erythropoiesis — Maturation Timeline",
+    title: "តើដំណើរការលូតលាស់ធ្វើឱ្យទុំរបស់គោលិកាក្រហម ចាប់ពីដំណាក់កាល Pronormoblast រហូតដល់ Mature erythrocyte ត្រូវប្រើរយៈពេលធម្មតាសរុបប៉ុន្មានថ្ងៃ?",
+    hint: "ប្រហែល ៥ ថ្ងៃក្នុងខួរឆ្អឹង។",
+    options: [
+      { text: "ប្រហែល 5 ថ្ងៃ (5 days)", isCorrect: true },
+      { text: "ប្រហែល 30 ថ្ងៃ", isCorrect: false },
+      { text: "ប្រហែល 120 ថ្ងៃ", isCorrect: false },
+      { text: "ត្រឹមតែ 2 ម៉ោងប៉ុណ្ណោះ", isCorrect: false }
+    ],
+    rationale: "ការវិវឌ្ឍពី Precursor cell (Pronormoblast) រហូតដល់ក្លាយជា Reticulocyte និង Mature RBC ប្រើរយៈពេលប្រហែល 5 ថ្ងៃនៅក្នុងខួរឆ្អឹង។ ចំណែក 120 ថ្ងៃគឺជាអាយុកាលរស់នៅរបស់ RBC ក្នុងចរន្តឈាម។"
+  },
+  {
+    topic: "RBC Maturation — General Trends",
+    title: "ក្នុងអំឡុងពេលដែលកោសិកាក្រហមវិវឌ្ឍពីខ្ចីបំផុតទៅចាស់ទុំ តើការប្រែប្រួលរូបសាស្ត្រទូទៅណាខ្លះដែលកើតឡើងជាបន្តបន្ទាប់?",
+    hint: "ទំហំកោសិកាថយចុះ, N:C ថយចុះ, ណៃយូខាប់រហូតដល់របូតចេញ, ស៊ីតូប្លាសប្រែពីខៀវទៅក្រហម។",
+    options: [
+      { text: "ទំហំកោសិកាថយចុះ, ផលធៀប N:C ថយចុះ, ណៃយូខាប់រហូតដល់បាត់បង់, ស៊ីតូប្លាសប្រែជាក្រហម", isCorrect: true },
+      { text: "ទំហំកោសិកាកាន់តែរីកធំឡើងៗ ហើយណៃយូបែកជាក្អែបច្រើន", isCorrect: false },
+      { text: "ស៊ីតូប្លាសកាន់តែប្រែជាខៀវចាស់ ហើយផលធៀប N:C កើនឡើង", isCorrect: false },
+      { text: "កោសិកាក្រហមចាប់ផ្តើមបង្កើតក្រានុលធំៗពណ៌ខ្មៅស្វាយ", isCorrect: false }
+    ],
+    rationale: "បម្រែបម្រួលពេល RBC លូតលាស់ទុំ៖ ទំហំកោសិកាកាត់បន្ថយ, ផលធៀប N:C ថយចុះ, ក្រូម៉ាទីនណៃយូកាន់តែខាប់ (Condensed/Pyknotic) រហូតដល់រលុបបាត់ (Extruded), និងស៊ីតូប្លាសប្រែពី Basophilic (ខៀវ) ទៅជា Eosinophilic/Acidophilic (ក្រហមទឹកក្រូច) ដោយសារការសំយោគអេម៉ូក្លូប៊ីន។"
+  },
+  {
+    topic: "Pronormoblast — Morphology",
+    title: "ក្រោមមីក្រូទស្សន៍ តើ Pronormoblast (Proerythroblast) មានលក្ខណៈសម្គាល់រូបសាស្ត្រសំខាន់ៗអ្វីខ្លះ?",
+    hint: "ទំហំធំជាងគេ (18-20 µm), N:C 4:1, ស៊ីតូប្លាសពណ៌ខៀវទឹកសមុទ្រចាស់ (Dark marine blue)។",
+    options: [
+      { text: "ទំហំ 18-20 µm, N:C 4:1, ណៃយូល្អិតស្មើសាច់, ស៊ីតូប្លាសពណ៌ខៀវទឹកសមុទ្រចាស់ (Dark marine blue)", isCorrect: true },
+      { text: "ទំហំ 8 µm, គ្មានណៃយូ, ស៊ីតូប្លាសពណ៌ផ្កាឈូកមាន Central pallor", isCorrect: false },
+      { text: "ទំហំ 12 µm, ណៃយូរាងដូចជើងសេះ, ស៊ីតូប្លាសពណ៌ប្រផេះ", isCorrect: false },
+      { text: "ទំហំ 15 µm, មានក្រានុលពណ៌ទឹកក្រូចធំៗពេញកោសិកា", isCorrect: false }
+    ],
+    rationale: "Pronormoblast គឺជាកោសិកាមេខ្ចីបំផុតក្នុងជួរ RBC៖ ទំហំធំ 18–20 µm, ផលធៀប N:C ខ្ពស់ 4:1, ក្រូម៉ាទីនម៉ដ្ឋស្មើសាច់, អាចឃើញ nucleoli តិចៗ និងស៊ីតូប្លាសពណ៌ខៀវចាស់ (Dark marine blue) ដោយសារសំបូរ RNA។"
+  },
+  {
+    topic: "Polychromatophilic Normoblast — Hemoglobin Synthesis",
+    title: "តើនៅដំណាក់កាល Normoblast មួយណាដែលអេម៉ូក្លូប៊ីនចាប់ផ្តើមសំយោគលេចចេញជារូបរាងឡើងដំបូង បង្កើតបានជាស៊ីតូប្លាសពណ៌ល្បាយចម្រុះ (ខៀវលាយក្រហមទឹកក្រូច)?",
+    hint: "Polychromatophilic normoblast (N:C 2:1)។",
+    svg: `<svg width="200" height="85" viewBox="0 0 200 85"><circle cx="100" cy="42" r="32" fill="#475569" stroke="#38bdf8" stroke-width="2"/><circle cx="100" cy="42" r="18" fill="#1e1b4b" stroke="#a855f7" stroke-width="2"/><text x="100" y="46" fill="#f8fafc" font-size="8" text-anchor="middle">Dense Nucleus</text><text x="100" y="80" fill="#f59e0b" font-size="9" text-anchor="middle">Mixed Color: Blue + Pink</text></svg>`,
+    options: [
+      { text: "Polychromatophilic normoblast", isCorrect: true },
+      { text: "Pronormoblast", isCorrect: false },
+      { text: "Basophilic normoblast", isCorrect: false },
+      { text: "Reticulocyte", isCorrect: false }
+    ],
+    rationale: "Polychromatophilic normoblast (ទំហំ ~13 µm, N:C 2:1) គឺជាដំណាក់កាលដែលចាប់ផ្តើមសំយោគអេម៉ូក្លូប៊ីនយ៉ាងសកម្ម ធ្វើឱ្យស៊ីតូប្លាសមានពណ៌ល្បាយចម្រុះ (Murky gray-blue/pink) រវាង RNA (ខៀវ) និង Hemoglobin (ក្រហមទឹកក្រូច)។"
+  },
+  {
+    topic: "Orthochromic Normoblast — Nucleus Extrusion",
+    title: "តើកោសិកាដំណាក់កាលចុងក្រោយបង្អស់ក្នុងខួរឆ្អឹងដែលនៅមានណៃយូខាប់ខ្មៅ (Pyknotic nucleus) មុនពេលណៃយូត្រូវបានច្រានទម្លាក់ចោល (Extruded) មានឈ្មោះថាអ្វី?",
+    hint: "Orthochromic normoblast (nRBC) ទំហំ ~8 µm, N:C 1:1។",
+    options: [
+      { text: "Orthochromic normoblast (Nucleated RBC / nRBC)", isCorrect: true },
+      { text: "Pronormoblast", isCorrect: false },
+      { text: "Myeloblast", isCorrect: false },
+      { text: "Promyelocyte", isCorrect: false }
+    ],
+    rationale: "Orthochromic normoblast (nRBC) មានទំហំ ~8 µm, N:C 1:1, ណៃយូតូចខ្លាំងនិងខាប់ខ្មៅ (Pyknotic/Dense chromatin)។ នៅចុងដំណាក់កាលនេះ ណៃយូត្រូវបានច្រានទម្លាក់ចេញពីកោសិកា ក្លាយជា Reticulocyte។"
+  },
+  {
+    topic: "Reticulocyte — Staining & Identification",
+    title: "ដើម្បីពិនិត្យរាប់កោសិកា Reticulocyte ក្រោមមីក្រូទស្សន៍ តើអ្នកបច្ចេកទេសត្រូវប្រើពណ៌ប្រភេទ Supravital stain មួយណាដើម្បីមើលឃើញបណ្តាញសរសៃ RNA (Reticulum)?",
+    hint: "New Methylene Blue ឬ Brilliant Cresyl Blue។",
+    options: [
+      { text: "New Methylene Blue (Supravital stain)", isCorrect: true },
+      { text: "Gram stain", isCorrect: false },
+      { text: "India ink", isCorrect: false },
+      { text: "Lugol's Iodine", isCorrect: false }
+    ],
+    rationale: "Reticulocyte គឺជា RBC មិនទាន់ទុំដែលគ្មានណៃយូ តែនៅសល់សំណល់ Ribosomal RNA។ ការជ្រលក់ពណ៌ Supravital stain ដូចជា New Methylene Blue ធ្វើឱ្យ RNA កកផ្តុំគ្នាជារូបរាងបណ្តាញសរសៃខៀវៗ (Reticulum network) យ៉ាងច្បាស់។"
+  },
+  {
+    topic: "Mature Erythrocyte — Normal Dimensions",
+    title: "តើកោសិកាឈាមក្រហមពេញវ័យធម្មតា (Normal mature erythrocyte) មានទំហំវិជ្ជមាត្រ កម្រាស់ និងផ្ទៃស្លេកកណ្តាល (Central pallor) ប៉ុន្មាន?",
+    hint: "វិជ្ជមាត្រ 6-8 µm, កម្រាស់ 1.7-2.4 µm, Central pallor 1-3 µm (ប្រហែល 1/3 នៃអង្កត់ផ្ចិត)។",
+    options: [
+      { text: "វិជ្ជមាត្រ 6-8 µm, កម្រាស់ 1.7-2.4 µm, និង Central pallor 1-3 µm (~1/3)", isCorrect: true },
+      { text: "វិជ្ជមាត្រ 15-20 µm, កម្រាស់ 5 µm, គ្មាន Central pallor", isCorrect: false },
+      { text: "វិជ្ជមាត្រ 2-4 µm, កម្រាស់ 0.5 µm, Central pallor ពេញកោសិកា", isCorrect: false },
+      { text: "វិជ្ជមាត្រ 10-15 µm, កម្រាស់ 3-5 µm, Central pallor រាងចង្អូរ", isCorrect: false }
+    ],
+    rationale: "RBC ពេញវ័យធម្មតាជារាងឌីសផតសងខាង (Biconcave disc) គ្មានណៃយូ មានវិជ្ជមាត្រ 6–8 µm, កម្រាស់ 1.7–2.4 µm, និងផ្ទៃថ្លាកណ្តាល (Central pallor) ទំហំ 1–3 µm ដែលស្មើនឹងប្រហែល ១/៣ នៃផ្ទៃកោសិកាទាំងមូល។"
+  },
+  {
+    topic: "WBC Morphology — Neutrophil",
+    title: "នៅពេលពិនិត្យឈាមក្រៅ (Peripheral blood smear) តើកោសិកា Neutrophil ពេញវ័យ (Segmented neutrophil) មានលក្ខណៈសម្គាល់ណៃយូ និងស៊ីតូប្លាសដូចម្តេច?",
+    hint: "ណៃយូចែកជា ២ ដល់ ៥ ក្លែប (2-5 lobes) ភ្ជាប់ដោយសរសៃស្តើងៗ, ស៊ីតូប្លាសពណ៌ផ្កាឈូកស្រាលមានក្រានុលល្អិតៗ។",
+    svg: `<svg width="200" height="85" viewBox="0 0 200 85"><circle cx="100" cy="42" r="32" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/><path d="M 85,32 Q 95,25 105,35 Q 115,45 110,55 Q 95,60 85,50 Z" fill="#818cf8" stroke="#4f46e5" stroke-width="1.5"/><circle cx="90" cy="36" r="6" fill="#312e81"/><circle cx="105" cy="42" r="5.5" fill="#312e81"/><circle cx="95" cy="52" r="6" fill="#312e81"/><text x="100" y="80" fill="#94a3b8" font-size="8" text-anchor="middle">Segmented 2-5 lobes (50-70%)</text></svg>`,
+    options: [
+      { text: "ណៃយូមាន 2-5 lobes ភ្ជាប់ដោយសរសៃស្តើង, ស៊ីតូប្លាសពណ៌ផ្កាឈូកស្រាលមានក្រានុលល្អិតៗ (Dust-like)", isCorrect: true },
+      { text: "ណៃយូមូលធំស្ទើរពេញកោសិកា គ្មានក្រានុល", isCorrect: false },
+      { text: "ណៃយូមាន ២ ក្លែប ជាមួយក្រានុលធំៗពណ៌ក្រហមទឹកក្រូច", isCorrect: false },
+      { text: "ណៃយូរាងដូចគ្រលៀន ជាមួយស៊ីតូប្លាសពណ៌ប្រផេះដូចកញ្ចក់ដុស", isCorrect: false }
+    ],
+    rationale: "Neutrophil (50-70% ក្នុងឈាមក្រៅ) មានទំហំ 10-15 µm, ណៃយូមាន 2–5 lobes ភ្ជាប់គ្នាដោយ Filaments, និងស៊ីតូប្លាសពណ៌ផ្កាឈូកស្រាល (Pale lilac/pink) ពោរពេញដោយ Fine dust-like secondary granules។"
+  },
+  {
+    topic: "WBC Morphology — Eosinophil",
+    title: "តើកោសិកាឈាមស Eosinophil មានលក្ខណៈសម្គាល់យ៉ាងដូចម្តេចដែលជួយឱ្យអ្នកបច្ចេកទេសសម្គាល់បានភ្លាមៗក្រោមមីក្រូទស្សន៍?",
+    hint: "ណៃយូមាន ២ ក្លែប (Bilobed) និងមានក្រានុលធំៗពណ៌ក្រហមទឹកក្រូច (Red-orange granules)។",
+    options: [
+      { text: "ណៃយូជាទូទៅមាន ២ ក្លែប (Bilobed) ជាមួយក្រានុលធំៗពណ៌ក្រហមទឹកក្រូច (Red-orange granules)", isCorrect: true },
+      { text: "ណៃយូរាងមូលចំកណ្តាល គ្មានក្រានុលពណ៌ទឹកក្រូចទេ", isCorrect: false },
+      { text: "ណៃយូចែកជា ៥ ក្លែប និងស៊ីតូប្លាសពណ៌ខៀវថ្លា", isCorrect: false },
+      { text: "ក្រានុលពណ៌ខ្មៅស្វាយបិទបាំងណៃយូជិតឈឹង", isCorrect: false }
+    ],
+    rationale: "Eosinophil (ទំហំ 10-16 µm) មានលក្ខណៈពិសេសគឺ ណៃយូមាន ២ ក្អែប/ក្លែប (Bilobed) និងស៊ីតូប្លាសផ្ទុកទៅដោយ Specific granules ធំៗមូលស្មើគ្នា ពណ៌ក្រហមទឹកក្រូច (Red-orange / Bright orange-pink)។"
+  },
+  {
+    topic: "WBC Morphology — Basophil",
+    title: "តើអ្វីជាលក្ខណៈពិសេសចម្បងនៃកោសិកា Basophil លើគំនាសឈាមបំពាក់ពណ៌ Wright-Giemsa?",
+    hint: "ក្រានុលធំៗពណ៌ស្វាយចាស់លាយខ្មៅ (Purple-black granules) បិទបាំងលើណៃយូ។",
+    options: [
+      { text: "មានក្រានុលធំៗពណ៌ស្វាយខ្មៅ (Purple-black granules) រាយបិទបាំងពីលើណៃយូ", isCorrect: true },
+      { text: "ស៊ីតូប្លាសពណ៌ផ្កាឈូករលោង គ្មានក្រានុល", isCorrect: false },
+      { text: "ណៃយូរាងជាអក្សរ C គ្មានក្រានុល", isCorrect: false },
+      { text: "មានទង់រំពាត់សម្រាប់ធ្វើចលនាក្នុងប្លាស្មា", isCorrect: false }
+    ],
+    rationale: "Basophil (ទំហំ 10-14 µm, តិចជាង 1% ក្នុងឈាម) សំបូរទៅដោយក្រានុលធំៗពណ៌ស្វាយក្រមៅលាយខ្មៅ (Coarse purple-black specific granules) ដែលជារឿយៗរាយពាសពេញរហូតដល់បិទបាំងណៃយូ (Obscuring the nucleus)។"
+  },
+  {
+    topic: "WBC Morphology — Monocyte",
+    title: "តើកោសិកា Monocyte ក្នុងឈាមក្រៅមានលក្ខណៈរូបរាង ណៃយូ និងស៊ីតូប្លាសយ៉ាងដូចម្តេច?",
+    hint: "ទំហំធំជាងគេ (12-20 µm), ណៃយូរាងដូចគ្រលៀន ឬក្រចកសេះ, ស៊ីតូប្លាសពណ៌ខៀវប្រផេះ (Ground glass) អាចមាន vacuoles។",
+    options: [
+      { text: "ទំហំធំ (12-20 µm), ណៃយូរាងក្រចកសេះ ឬគ្រលៀន, ស៊ីតូប្លាសពណ៌ខៀវប្រផេះ (Blue-gray / Ground glass)", isCorrect: true },
+      { text: "ទំហំតូច (6-8 µm), ណៃយូមូលខាប់ស្ទើរពេញកោសិកា", isCorrect: false },
+      { text: "ណៃយូចែកជា ៤ ក្លែបស្មើគ្នា គ្មានស៊ីតូប្លាស", isCorrect: false },
+      { text: "ស៊ីតូប្លាសមានក្រានុលធំៗពណ៌ក្រហមឆ្អៅ", isCorrect: false }
+    ],
+    rationale: "Monocyte គឺជា WBC ធំជាងគេក្នុងឈាមក្រៅ (12–20 µm)៖ ណៃយូរាងបត់បែន (Folded, indented, kidney or horseshoe-shaped), ក្រូម៉ាទីនម៉ដ្ឋភ្លឺ (Lacy chromatin), ស៊ីតូប្លាសពណ៌ខៀវប្រផេះ (Blue-gray) រូបរាងដូចកញ្ចក់ដុស (Ground glass appearance) និងអាចមាន Vacuoles។"
+  },
+  {
+    topic: "CBC Correlation Check — Rule of Three",
+    title: "ក្នុងមន្ទីរពិសោធន៍ឈាមវិទ្យា តើ 'Rule of Three' (រូបមន្តផ្ទៀងផ្ទាត់ទំនាក់ទំនង CBC) ត្រូវបានកំណត់យ៉ាងដូចម្តេចសម្រាប់ Normocytic Normochromic RBCs?",
+    hint: "Hgb x 3 = Hct (+/- 3) និង RBC x 3 = Hgb។",
+    options: [
+      { text: "Hgb × 3 = Hct ± 3 និង RBC × 3 = Hgb", isCorrect: true },
+      { text: "Hgb + 3 = Hct និង RBC + 3 = Hgb", isCorrect: false },
+      { text: "Hgb ÷ 3 = Hct និង RBC ÷ 3 = Hgb", isCorrect: false },
+      { text: "Hgb × 10 = Hct និង RBC × 10 = Hgb", isCorrect: false }
+    ],
+    rationale: "យោងតាមស្លាយមេរៀន៖ រូបមន្ត Correlation check (Rule of Three) គឺ៖ Hgb × 3 = Hct ± 3 (គិតជា %) និង RBC count × 3 ≈ Hgb (គិតជា g/dL) ប្រើដើម្បីត្រួតពិនិត្យសុពលភាពលទ្ធផលម៉ាស៊ីន CBC មុននឹងចេញលទ្ធផល។"
+  },
+  {
+    topic: "Anemia Classification — Red Cell Indices",
+    title: "អ្នកជំងឺម្នាក់មានលទ្ធផល CBC៖ MCV = 70 fL (ធម្មតា 80-100 fL) និង MCHC = 29% (ធម្មតា 32-36%)។ លើគំនាសឈាមឃើញកោសិកាតូចៗ និងស្លេក (Central pallor > 3 µm)។ តើអ្នកជំងឺស្ថិតក្នុងប្រភេទស្លេកស្លាំងណា?",
+    hint: "MCV ទាបជាង 80 fL (Microcytic) និង MCHC ទាបជាង 32% (Hypochromic)។",
+    options: [
+      { text: "Microcytic hypochromic anemia", isCorrect: true },
+      { text: "Normocytic normochromic anemia", isCorrect: false },
+      { text: "Macrocytic hyperchromic anemia", isCorrect: false },
+      { text: "Aplastic megaloblastic anemia", isCorrect: false }
+    ],
+    rationale: "យោងតាមស្លាយមេរៀន៖ Microcytic hypochromic anemia ត្រូវបានកំណត់ដោយ MCV < 80 fL និង MCHC < 32% ហើយលើគំនាសឈាមឃើញ RBC តូចៗ និងមានផ្ទៃស្លេកកណ្តាលរីកធំ (Central pallor > 3 µm) ដូចជាក្នុងជំងឺខ្វះជាតិដែក (IDA) ឬ Thalassemia។"
+  },
+  {
+    topic: "Hematology — Critical Laboratory Values",
+    title: "យោងតាមតារាងតម្លៃអាសន្ន (Critical values) ក្នុងស្លាយមេរៀន តើតម្លៃកម្រិតទាបអាសន្ន (Critical low values) សម្រាប់ Hgb និង Platelets ដែលត្រូវរាយការណ៍បន្ទាន់ទៅគ្រូពេទ្យគឺប៉ុន្មាន?",
+    hint: "Hgb < 7.0 g/dL និង Platelets < 20.0 x 10^9/L។",
+    options: [
+      { text: "Hgb ≤ 7.0 g/dL និង Platelets ≤ 20.0 × 10⁹/L", isCorrect: true },
+      { text: "Hgb ≤ 12.0 g/dL និង Platelets ≤ 150.0 × 10⁹/L", isCorrect: false },
+      { text: "Hgb ≤ 10.0 g/dL និង Platelets ≤ 100.0 × 10⁹/L", isCorrect: false },
+      { text: "Hgb ≤ 3.0 g/dL និង Platelets ≤ 5.0 × 10⁹/L", isCorrect: false }
+    ],
+    rationale: "យោងតាមស្លាយមេរៀន តម្លៃ Critical values (Panic values) រួមមាន៖ Hgb Low < 7.0 g/dL (អាចបណ្តាលឱ្យ Tachycardia, Syncope, Hypotension), WBC Low < 3.0 × 10⁹/L, និង Platelets Low < 20.0 × 10⁹/L (ប្រឈមនឹងការហូរឈាមដោយឯកឯង)។"
+  }
+];
+
+function shuffleArray(arr) {
+  const newArr = [...arr];
+  for (let i = newArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
+}
+
+let activeQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let timeLeft = 60;
+let timerInterval = null;
+let answered = false;
+let userResults = [];
+
+function initQuiz() {
+  activeQuestions = shuffleArray(rawQuestions).map(q => {
+    return {
+      ...q,
+      options: shuffleArray(q.options)
+    };
+  });
+  
+  currentIndex = 0;
+  score = 0;
+  userResults = [];
+  document.getElementById('finalCard').style.display = 'none';
+  document.getElementById('quizCard').style.display = 'block';
+  loadQuestion(currentIndex);
+}
+
+function loadQuestion(index) {
+  answered = false;
+  timeLeft = 60;
+  clearInterval(timerInterval);
+  
+  const q = activeQuestions[index];
+  document.getElementById('topicBadge').textContent = q.topic;
+  document.getElementById('qCount').textContent = `សំណួរទី ${index + 1} នៃ ${activeQuestions.length}`;
+  document.getElementById('questionTitle').textContent = `${index + 1}. ${q.title}`;
+  
+  const diagBox = document.getElementById('diagramContainer');
+  if (q.svg) {
+    diagBox.innerHTML = q.svg;
+    diagBox.style.display = 'flex';
+  } else {
+    diagBox.innerHTML = '';
+    diagBox.style.display = 'none';
+  }
+
+  document.getElementById('hintContent').textContent = q.hint;
+  document.getElementById('hintContent').style.display = 'none';
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = (index === activeQuestions.length - 1) ? "ពិនិត្យលទ្ធផល →" : "សំណួរបន្ទាប់ →";
+  
+  const optionsGrid = document.getElementById('optionsGrid');
+  optionsGrid.innerHTML = '';
+  q.options.forEach((optObj, optIdx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="letter">${String.fromCharCode(65 + optIdx)}.</span> <span>${optObj.text}</span>`;
+    btn.onclick = () => selectOption(optIdx);
+    optionsGrid.appendChild(btn);
+  });
+  
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      updateTimerUI();
+    } else {
+      clearInterval(timerInterval);
+      if (!answered) {
+        handleTimeout();
+      }
+    }
+  }, 1000);
+  
+  updateProgress();
+}
+
+function updateTimerUI() {
+  const el = document.getElementById('timerText');
+  const box = document.getElementById('timerBox');
+  el.textContent = timeLeft + 's';
+  if (timeLeft <= 10) {
+    box.classList.add('urgent');
+  } else {
+    box.classList.remove('urgent');
+  }
+}
+
+function toggleHint() {
+  const h = document.getElementById('hintContent');
+  h.style.display = h.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectOption(chosenIdx) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+  
+  const q = activeQuestions[currentIndex];
+  const buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(btn => btn.disabled = true);
+  
+  const correctIdx = q.options.findIndex(o => o.isCorrect);
+  const isCorrect = q.options[chosenIdx].isCorrect;
+  
+  if (isCorrect) {
+    score++;
+    buttons[chosenIdx].classList.add('correct');
+  } else {
+    buttons[chosenIdx].classList.add('wrong');
+    buttons[correctIdx].classList.add('correct');
+  }
+  
+  userResults.push({
+    q: q.title,
+    chosen: q.options[chosenIdx].text,
+    correctText: q.options[correctIdx].text,
+    isCorrect: isCorrect,
+    why: q.rationale
+  });
+  
+  document.getElementById('liveScore').textContent = `ពិន្ទុ: ${score} / ${currentIndex + 1}`;
+  document.getElementById('feedbackText').textContent = q.rationale;
+  document.getElementById('feedbackBox').style.display = 'block';
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function handleTimeout() {
+  answered = true;
+  const q = activeQuestions[currentIndex];
+  const buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(btn => btn.disabled = true);
+  const correctIdx = q.options.findIndex(o => o.isCorrect);
+  buttons[correctIdx].classList.add('correct');
+  
+  userResults.push({
+    q: q.title,
+    chosen: "អស់ពេល (Time Expired)",
+    correctText: q.options[correctIdx].text,
+    isCorrect: false,
+    why: q.rationale
+  });
+  
+  document.getElementById('feedbackText').innerHTML = '<strong style="color:#ef4444;">អស់ពេល ៦០ វិនាទី! (Time Expired)</strong><br>' + q.rationale;
+  document.getElementById('feedbackBox').style.display = 'block';
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex < activeQuestions.length) {
+    loadQuestion(currentIndex);
+  } else {
+    showFinalResults();
+  }
+}
+
+function updateProgress() {
+  const pct = ((currentIndex + 1) / activeQuestions.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function showFinalResults() {
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('finalCard').style.display = 'block';
+  const pct = Math.round((score / activeQuestions.length) * 100);
+  document.getElementById('finalScoreVal').textContent = `${score} / ${activeQuestions.length} (${pct}%)`;
+  
+  let msg = '';
+  if (pct >= 80) msg = 'ល្អប្រសើរណាស់! អ្នកយល់ច្បាស់ពីមេរៀន Hematopoiesis & Erythropoiesis សម្រាប់ត្រៀមប្រឡងឆមាស។';
+  else if (pct >= 60) msg = 'លទ្ធផលល្អបង្គួរ! គួររំលឹកបន្ថែមលើរូបរាងកោសិកាឈាមស (WBC differential), ដំណាក់កាល Normoblasts, និង Rule of Three។';
+  else msg = 'ត្រូវរំលឹកមេរៀនឡើងវិញ ជាពិសេសការបែងចែក Anemia indices (MCV/MCHC), កោសិកា Precursor ក្នុងខួរឆ្អឹង និងតួនាទី EPO។';
+  document.getElementById('finalFeedback').textContent = msg;
+
+  const reviewEl = document.getElementById('reviewContainer');
+  reviewEl.innerHTML = '<h3 style="margin-bottom:12px; color:var(--primary);">ពិនិត្យចម្លើយលម្អិត (Answer Review):</h3>' + 
+    userResults.map((r, i) => `
+      <details class="review-item">
+        <summary>${i + 1}. ${r.isCorrect ? "✓ ត្រឹមត្រូវ" : "✗ ខុស"} — ${r.q.substring(0, 50)}...</summary>
+        <p><strong>សំណួរពេញលេញ៖</strong> ${r.q}</p>
+        <p><strong>ចម្លើយរបស់អ្នក៖</strong> <span style="color:${r.isCorrect ? '#86efac' : '#fca5a5'}">${r.chosen}</span></p>
+        <p><strong>ចម្លើយត្រឹមត្រូវ៖</strong> <span style="color:#86efac">${r.correctText}</span></p>
+        <p><strong>ការពន្យល់៖</strong> ${r.why}</p>
+      </details>
+    `).join('');
+}
+
+window.onload = initQuiz;
+</script>
+</body>
+</html>
